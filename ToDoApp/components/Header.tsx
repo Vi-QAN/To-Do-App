@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { IconButton } from '@react-native-material/core'
 import Icon from '@expo/vector-icons/MaterialCommunityIcons'
 
-export default function Header(){
+export function Header(){
     const [count,setCount] = useState(0);
     const buttonPress = () => setCount(count + 1);
     return (
@@ -33,10 +33,10 @@ const styles = StyleSheet.create({
         height: '15%',
         width: '100%',
         position: 'absolute',
-        padding: 12,
+        paddingHorizontal: '6%',
         margin: 0,
-        top: 1,
-        left: 2,
+        top: 0,
+        left: 0,
     }, 
 
     date: {

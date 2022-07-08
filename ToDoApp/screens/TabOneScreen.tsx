@@ -3,12 +3,15 @@ import { StyleSheet } from 'react-native';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import Header from '../components/Header';
+import {Header} from '../components/Header';
+import Calendar from '../components/Calendar';
+import { Moment } from 'moment';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   return (
     <View style={styles.container}>
       <Header />
+      <Calendar />
       {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="/screens/TabOneScreen.tsx" /> */}
     </View>
@@ -20,6 +23,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'column',
+    padding: 0,
+    margin: 0,
   },
   title: {
     fontSize: 20,
