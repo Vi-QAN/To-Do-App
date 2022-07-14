@@ -1,17 +1,24 @@
 import { StyleSheet } from 'react-native';
-
+import { useState } from 'react';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import {Header} from '../components/Header';
+import Header from '../components/Header';
 import Calendar from '../components/Calendar';
-import { Moment } from 'moment';
+import Tasks from '../components/Tasks';
+import Add from '../components/Add';
+import moment  from 'moment';
+
+
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-  return (
+  const today = moment();
+  return ( 
     <View style={styles.container}>
-      <Header />
-      <Calendar />
+      <Header today={today}/>
+      <Calendar today={today}/>
+      <Tasks />
+      <Add />
       {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="/screens/TabOneScreen.tsx" /> */}
     </View>

@@ -3,15 +3,16 @@ import { StyleSheet, View, Text } from 'react-native';
 import Dates from './Dates';
 
 
-const Calendar = () => {
-    return (
-      <View 
-        style= {styles.container}
-        
-      >
-        <Dates />
-      </View>
-    );
+const Calendar = (props: any) => {
+
+  return (
+    <View 
+      style= {styles.container}
+      
+    >
+      <Dates today={props.today} />
+    </View>
+  );
   
 }
 

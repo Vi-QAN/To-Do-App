@@ -1,62 +1,64 @@
-import React, { PureComponent } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
-  TouchableOpacity,
+  TouchableHighlight,
 } from 'react-native';
 import {Moment} from 'moment';
 
+
+
 const Date = (props: any) => {
+ 
   return (
     <View style={{
-      paddingRight: 30,
+      paddingRight: 20,
       alignItems: 'center',
     }}>
-      <Text style={styles.text}>{props.month}</Text>
-      <TouchableOpacity 
-          
+      <Text style={styles.text}>{props.dayOfWeek}</Text>
+      <TouchableHighlight
+          onPress={props.onPress}
+          underlayColor={'#fff'}
          >
           <Text 
             style={[
-              styles.btn,
-              {fontWeight: 'bold'}
+              {fontWeight: 'bold',fontSize: 20,margin: 0,paddingVertical:9, paddingHorizontal: 11, borderRadius:80},
+              props.selected ? styles.btnActive : styles.btnDeactive,
+
             ]}
           >
             {props.day}
           </Text>
-      </TouchableOpacity>
-    </View>
+      </TouchableHighlight>
+  </View>
     
   )
 
   
-}
+};
 
 const styles = {
   container: {
     
+
     
-  },
-  containerActive: {
-    borderBottomColor: '#FFFFFF',
   },
   text: {
     fontSize: 16,
-    marginBottom: 15,
+    marginBottom: 5,
     color: '#b3b3b3',
-  },
-  background: {
-    backgroundColor: '#eee',
-  },
-  btn: {
-    color: '#000',
-    fontSize: 20,
   },
   btnActive: {
     color: '#FFFFFF',
+    backgroundColor:  `#1e90ff`
+  },
+  btnDeactive: {
+    color: '#000',
+    backgroundColor: '#fff',
+    
   },
 };
 
 
 
-export default Date;
+export { Date };

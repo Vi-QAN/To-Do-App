@@ -3,13 +3,12 @@ import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { IconButton } from '@react-native-material/core'
 import Icon from '@expo/vector-icons/MaterialCommunityIcons'
 
-export function Header(){
+const Header = (props: any) => {
     const [count,setCount] = useState(0);
-    const buttonPress = () => setCount(count + 1);
     return (
         <View style = {styles.container}>
             <Text style={styles.date}>
-                Today Date
+                {props.today.format('dddd, MMMM D')}
             </Text>
             <View style = {styles.titleBox}>
                 <Text style={styles.title}>
@@ -43,7 +42,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         color: '#b3b3b3',
-        letterSpacing: 1,
+        letterSpacing: 0,
         marginBottom: 2
     },
 
@@ -75,3 +74,5 @@ const styles = StyleSheet.create({
 
 
 });
+
+export default Header;
