@@ -12,8 +12,11 @@ const Date = (props: any) => {
  
   return (
     <View style={{
-      paddingRight: 20,
       alignItems: 'center',
+      width: 'auto',
+      height: 'auto',
+      padding: 0,
+      marginRight: 20,
     }}>
       <Text style={styles.text}>{props.dayOfWeek}</Text>
       <TouchableHighlight
@@ -22,7 +25,7 @@ const Date = (props: any) => {
          >
           <Text 
             style={[
-              {fontWeight: 'bold',fontSize: 20,margin: 0,paddingVertical:9, paddingHorizontal: 11, borderRadius:80},
+              {fontWeight: 'bold',fontSize: 20,margin: 0,paddingVertical:10, paddingHorizontal: 11, borderRadius: 80},
               props.selected ? styles.btnActive : styles.btnDeactive,
 
             ]}
