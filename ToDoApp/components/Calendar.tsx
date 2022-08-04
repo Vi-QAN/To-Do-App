@@ -10,41 +10,30 @@ import moment from 'moment';
 const DATA = [
   {
     date: moment(),
-    taskList: [
-      {
-        taskID: 0,
-        taskName: 'Clean the desk',
-        isFinish: false,
-      },
-      {
-        taskID: 1,
-        taskName: 'Sweep the floor',
-        isFinish: false,
-      }
-    ]
-  },
-  {
-    date: moment().clone().add(1,'days'),
-    taskList: [
-      {
-        taskID: 0,
-        taskName: 'Walk the dog',
-        isFinish: false,
-      },
-      {
-        taskID: 1,
-        taskName: 'Clean the house',
-        isFinish: false,
-      }
-      
-    ]
-  },
-  {
-    date: moment().clone().add(2,'days'),
     taskList: []
   },
 ]
 
+const ACTIONS = {
+  ADD_TASK: 'askTask',
+  ADD_DATE: 'askDate'
+}
+
+const dataReducer = (state: any, action: {index: number, type: any; payload: any}) => {
+  switch (action.type){
+    case ACTIONS.ADD_TASK: 
+      state.map((item: any, index: number) => {
+        if (index === action.index ){
+          item.taskList.push(action.payload.task);
+        }
+      })
+      return state;
+      
+    case ACTIONS.ADD_DATE:
+      
+      return state;
+  }
+}
 
 // app logic
 // get all the dates that's in data array
@@ -56,10 +45,14 @@ const extractDates = (props: any) => {
   return dateList;
 }
 
+
 // renderer
 const Calendar = (props: any) => {
   // useState for data
-  const [data,setData] = useState(DATA);
+  const [data,dataDispatch] = useReducer(dataReducer, DATA);
+  
+  // task change toggle
+  const [taskChanged,setTaskChanged] = useState(false);
 
   // useState for date list
   const [dateList,setDateList] = useState(extractDates({data: data}));
@@ -78,19 +71,16 @@ const Calendar = (props: any) => {
   useEffect(() => {
     // set current task list according to chosen date
     setTaskList(data[selectedIndex].taskList);
-  },[selectedIndex])
+  },[selectedIndex,taskChanged])
   
   
   // handle addTask button in Add component
   const addTaskHandler = useCallback((props: any) => {
-    // make a copy of original data
-    let temp = [...props.data];
-    
-    // add task to task list of selected index (selected date)
-    temp[props.selectedIndex].taskList.push(props.newTask);
-
     // set new data
-    setData(temp);
+    dataDispatch({type: ACTIONS.ADD_TASK, payload: {task: props.newTask}, index: props.selectedIndex});
+
+    // toggle task change for rerendering task list
+    setTaskChanged((changed) => !changed);
   },[])
 
   return (
