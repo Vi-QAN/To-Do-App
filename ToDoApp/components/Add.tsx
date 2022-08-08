@@ -1,18 +1,15 @@
 import { View, TouchableHighlight, StyleSheet, Text} from 'react-native';
 import React from 'react';
 
-const newTask = {
-    taskID: 3,
-    taskName: 'Sweep the floor',
-    isFinish: false,
-}
+
 const Add = (props: any) => {
     return (
         <View style={styles.container}>
             <TouchableHighlight 
                 activeOpacity={0.6} 
                 underlayColor={'#FFF'} 
-                onPress={() => props.addTaskHandler({data: props.data, selectedIndex: props.selectedIndex, newTask: newTask})} 
+                onPress={
+                    () => props.setPopUp(true)} 
             >
                 <View style={styles.btn}>
                     <Text style={styles.text}>+</Text>

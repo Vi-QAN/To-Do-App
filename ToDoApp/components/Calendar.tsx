@@ -1,9 +1,10 @@
 import React, { useReducer, useState, useEffect, useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Modal } from 'react-native';
 import Dates from './Dates';
 import Tasks from '../components/Tasks';
 import Add from '../components/Add';
 import moment from 'moment';
+import AddScreen from '../screens/AddScreen';
 
 // data object - a 2D array contains
 // date - a moment object and corresponding task list for that date
@@ -12,22 +13,66 @@ const DATA = [
     date: moment(),
     taskList: []
   },
+  {
+    date: moment().clone().add(1,'days'),
+    taskList: []
+  },
+  {
+    date: moment().clone().add(2,'days'),
+    taskList: []
+  },
+  {
+    date: moment().clone().add(3,'days'),
+    taskList: []
+  },
+  {
+    date: moment().clone().add(4,'days'),
+    taskList: []
+  },
+  {
+    date: moment().clone().add(5,'days'),
+    taskList: []
+  },
+  
 ]
 
 const ACTIONS = {
   ADD_TASK: 'askTask',
-  ADD_DATE: 'askDate'
+  ADD_DATE: 'askDate',
+  MODIFY_TASK: 'modifyTask',
 }
 
-const dataReducer = (state: any, action: {index: number, type: any; payload: any}) => {
+const TASK_ACTIONS = {
+  MODIFY_NAME: 'modifyName',
+  MODIFY_FINISH: 'modifyFinish',
+  MODIFY_DATE: 'modifyDate',
+}
+
+const dataReducer = (state: any, action: {index: number, type: any, subType: any, payload: any }) => {
   switch (action.type){
     case ACTIONS.ADD_TASK: 
       state.map((item: any, index: number) => {
         if (index === action.index ){
-          item.taskList.push(action.payload.task);
+          // get task list of chosen date
+          let curTaskList = item.taskList;
+
+          // modify task id
+          action.payload.task.id = curTaskList.length + 1;
+
+          // add task to the list
+          curTaskList.push(action.payload.task);
+          
         }
       })
       return state;
+    
+    case ACTIONS.MODIFY_TASK: 
+      switch (action.subType){
+        case TASK_ACTIONS.MODIFY_FINISH:
+
+        
+      }
+      
       
     case ACTIONS.ADD_DATE:
       
@@ -50,6 +95,9 @@ const extractDates = (props: any) => {
 const Calendar = (props: any) => {
   // useState for data
   const [data,dataDispatch] = useReducer(dataReducer, DATA);
+
+  // useState for displaying add screen popup
+  const [popUp, setPopUp] = useState(false); 
   
   // task change toggle
   const [taskChanged,setTaskChanged] = useState(false);
@@ -77,7 +125,7 @@ const Calendar = (props: any) => {
   // handle addTask button in Add component
   const addTaskHandler = useCallback((props: any) => {
     // set new data
-    dataDispatch({type: ACTIONS.ADD_TASK, payload: {task: props.newTask}, index: props.selectedIndex});
+    dataDispatch({index: props.selectedIndex, type: ACTIONS.ADD_TASK, subType: null, payload: {task: props.newTask}, });
 
     // toggle task change for rerendering task list
     setTaskChanged((changed) => !changed);
@@ -89,7 +137,8 @@ const Calendar = (props: any) => {
     >
       <Dates today={props.today} data={dateList} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex}/>
       <Tasks taskList={taskList}/>
-      <Add addTaskHandler={addTaskHandler} selectedIndex={selectedIndex} data={data} />
+      <AddScreen popUp={popUp} setPopUp={setPopUp} addTaskHandler={addTaskHandler} selectedIndex={selectedIndex} data={data}/>
+      <Add setPopUp={setPopUp}/>
     </View>
   );
   

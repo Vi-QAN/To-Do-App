@@ -1,66 +1,131 @@
-import { View, TextInput, StyleSheet, Text } from 'react-native'
+import { View, TextInput, StyleSheet, Text, Modal, TouchableHighlight, KeyboardAvoidingView,
+TouchableWithoutFeedback, 
+Keyboard,
+Platform} from 'react-native'
 import { useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const InputField = (props: any) => {
 
     return (
-        <View style={styles.inputFieldContainer}>
+        <View style={styles.fieldContainer}>
             <MaterialIcons name={props.iconName} style={styles.icon} size={30} />
             {/* <Text style={styles.}>10:00 am</Text> */}
         </View>
     )
 }
 
-export default function AddScreen() {
-    const [text,onChangeText] = useState('');
+export default function AddScreen(props: any) {
+    const [text,setText] = useState('');
     return (
-        <View style={styles.container}>
-            <TextInput 
-                style={styles.textInput}
-                placeholder='Write task here'
-                onChangeText={text => onChangeText(text) }
-                multiline={true}
-                onPressOut={()=> {}}
-            />
-            <InputField iconName='alarm' />
-            <InputField iconName='notifications-active' />
-            <InputField iconName='label' />
-            
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={props.popUp}
+        >
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"} 
+                style={styles.container}
+            >
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.modalView}>
+                        <TouchableHighlight 
+                            activeOpacity={0.6} 
+                            underlayColor={'#FFF'} 
+                            onPress={() => props.setPopUp(false)} 
+                        >
+                            <View style={styles.closeBtn}>
+                                <Text style={{fontSize: 20}}>X</Text>
+                            </View>
+                        </TouchableHighlight>
+                        <TextInput 
+                            style={styles.textInput}
+                            placeholder='Write task here'
+                            onChangeText={text => setText(text) }
+                            multiline={true}
+                            onPressOut={()=> {Keyboard.dismiss}}
+                        />
+                        <InputField iconName='alarm' />
+                        <InputField iconName='notifications-active' />
+                        <InputField iconName='label' />
+
+                        <TouchableHighlight 
+                            activeOpacity={0.6} 
+                            underlayColor={'#FFF'} 
+                            onPress={() => {
+                                let newTask = {
+                                    id: 0,
+                                    taskName: text,
+                                    isFinish: false,
+                                }
+                                setText('');
+                                props.addTaskHandler({data: props.data, selectedIndex: props.selectedIndex, newTask: newTask})
+                                props.setPopUp(false);
+                            }} 
+                            >
+                            <View style={styles.addBtn}>
+                                <Text style={{
+                                    fontSize: 20, 
+                                    color: '#fff',
+                                    fontWeight: '600'}}>Add</Text>
+                            </View>
+                        </TouchableHighlight>
 
 
 
-        </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+        </Modal>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: '#fff',
+        flex: 1
 
     },
 
-    inputFieldContainer: {
+    modalView: {
+        fontSize: 20,
+        backgroundColor: '#fff',
+        color: '#000',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'space-evenly'
+    },
+
+    fieldContainer: {
         flexDirection: 'row',
         margin: 20,
     },
 
     textInput: {
         width: '100%',
-        height: '30%',
-        position: 'absolute',
-        top: 0,
-        backgroundColor: '#eee',
+        height: 140,
         fontSize: 40,
-        paddingHorizontal: 40,
-        paddingVertical: 30,
+        paddingHorizontal: 30,
     }, 
+
+    closeBtn: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 50,
+        width: 60,
+        height: 60,
+    },
 
     icon: {
         marginRight: 20,
         
+    },
+
+    addBtn: {
+        alignItems: 'center',
+        backgroundColor: '#1e90ff',
+        paddingVertical: 10,
+        margin: 20,
+        borderRadius: 7,
     }
 
 

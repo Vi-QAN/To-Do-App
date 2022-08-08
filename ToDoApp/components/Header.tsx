@@ -4,7 +4,6 @@ import { IconButton } from '@react-native-material/core'
 import Icon from '@expo/vector-icons/MaterialCommunityIcons'
 
 const Header = (props: any) => {
-    const [count,setCount] = useState(0);
     return (
         <View style = {styles.container}>
             <Text style={styles.date}>
@@ -18,7 +17,6 @@ const Header = (props: any) => {
                     style={styles.button}
                     icon={props => <Icon name="magnify" {...props} />}
                 >
-
                 </IconButton>
             </View>
         </View>
