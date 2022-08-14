@@ -1,5 +1,5 @@
-import React, { useReducer, useState, useEffect, useCallback } from 'react';
-import { StyleSheet, View, Modal } from 'react-native';
+import React, { useReducer, useState, useEffect} from 'react';
+import { StyleSheet, View} from 'react-native';
 import Dates from './Dates';
 import Tasks from '../components/Tasks';
 import Add from '../components/Add';
@@ -98,9 +98,6 @@ const Calendar = (props: any) => {
 
   // useState for displaying add screen popup
   const [popUp, setPopUp] = useState(false); 
-  
-  // task change toggle
-  const [taskChanged,setTaskChanged] = useState(false);
 
   // useState for date list
   const [dateList,setDateList] = useState(extractDates({data: data}));
@@ -119,25 +116,15 @@ const Calendar = (props: any) => {
   useEffect(() => {
     // set current task list according to chosen date
     setTaskList(data[selectedIndex].taskList);
-  },[selectedIndex,taskChanged])
-  
-  
-  // handle addTask button in Add component
-  const addTaskHandler = useCallback((props: any) => {
-    // set new data
-    dataDispatch({index: props.selectedIndex, type: ACTIONS.ADD_TASK, subType: null, payload: {task: props.newTask}, });
-
-    // toggle task change for rerendering task list
-    setTaskChanged((changed) => !changed);
-  },[])
+  },[selectedIndex,taskList])
 
   return (
     <View 
       style= {styles.container}
     >
       <Dates today={props.today} data={dateList} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex}/>
-      <Tasks taskList={taskList}/>
-      <AddScreen popUp={popUp} setPopUp={setPopUp} addTaskHandler={addTaskHandler} selectedIndex={selectedIndex} data={data}/>
+      <Tasks taskList={taskList} setTaskList={setTaskList}/>
+      <AddScreen popUp={popUp} setPopUp={setPopUp} setTaskList={setTaskList} taskList={taskList}/>
       <Add setPopUp={setPopUp}/>
     </View>
   );

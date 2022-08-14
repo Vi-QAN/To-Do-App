@@ -5,24 +5,11 @@ import {
 } from 'react-native';
 import { Date } from './Date';
 
-
-const getDay = (props: any) => {
-  // calculate the previous/next Days comparing to current Day
-  const type = 'days';
-    
-}
-
-
 const Dates = (props: any) => {
   const selectedIndex = props.selectedIndex;
   const [offSet, setOffSet] = useState(0); 
   const [isScrollLeft, setIsScrollLeft] = useState(false);
   const data = props.data;
-  
-  const noOfDays = 5;
-
-  
-
 
   const renderItem = ({item, index}: any) => {
     const selected = index === selectedIndex ? true : false;
@@ -33,7 +20,9 @@ const Dates = (props: any) => {
         index={index}
         dayOfWeek={item.format('dddd').charAt(0)}
         day={item.format('D')}
-        onPress={() => {props.setSelectedIndex(index)}} 
+        onPress={() => {
+          props.setSelectedIndex(index)
+        }} 
         selected={selected} />
     )
   }

@@ -1,7 +1,6 @@
+import React from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { useReducer } from 'react';
-import {ACTIONS} from './Tasks';
 
 const Bullet = (props: any) => {
   return (
@@ -21,20 +20,14 @@ const Bullet = (props: any) => {
   )
 }
 
-// const CheckBox = () => {
-//   return (
-//     <Checkbox /> 
-//   )
-// }
 
 
 const Task = (props: any) => {
-
+  
   return (
     <TouchableWithoutFeedback
       key={props.id}
       touchSoundDisabled={true}
-      
     >
       <View style={styles.container}>
           <Bullet color={props.color} />
@@ -43,7 +36,7 @@ const Task = (props: any) => {
             styles.finished 
             : 
             styles.name
-          }>{props.name} </Text>
+          }>{props.taskName} </Text>
           <BouncyCheckbox 
             style={{
                 position: 'absolute',
@@ -53,10 +46,10 @@ const Task = (props: any) => {
             fillColor={props.color}
             unfillColor="#FFFFFF"
             iconStyle={{ borderColor: props.color }}
-            onPress={() => {
-              props.setCurTask(props.id);
-              props.taskDispatch({type: ACTIONS.SET_FINISH, payload: true})
-            }}/>
+
+            disableBuiltInState={true}// disable auto handle isChecked 
+            isChecked={props.isCompleted}
+            onPress={props.finishHandler}/>
       </View>
     </TouchableWithoutFeedback>
   )
@@ -85,7 +78,9 @@ const styles = StyleSheet.create({
 
   finished: {
     textDecorationLine: 'line-through',
-    color: '#eee',
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '600'
   }
 
 

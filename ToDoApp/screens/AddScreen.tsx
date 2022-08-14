@@ -54,12 +54,15 @@ export default function AddScreen(props: any) {
                             underlayColor={'#FFF'} 
                             onPress={() => {
                                 let newTask = {
-                                    id: 0,
+                                    id: props.taskList.length + 1,
                                     taskName: text,
                                     isFinish: false,
                                 }
                                 setText('');
-                                props.addTaskHandler({data: props.data, selectedIndex: props.selectedIndex, newTask: newTask})
+                                // add new task to current task list
+                                props.setTaskList((taskList: any) => taskList.push(newTask));
+
+                                // close popup screen
                                 props.setPopUp(false);
                             }} 
                             >

@@ -1,51 +1,40 @@
-import { StyleSheet, FlatList, ActionSheetIOS } from 'react-native';
-import { useState, useReducer } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 import Task from './Task';
 
 // multiple colors to color multiple tasks
 const colors = ['#61f4de','#65cbe9', '#68b6ef ','#6c8dfa','#6e78ff', '#4c9afa']
 
-// randomly choose color for each task
-const generateRandom = () => {
-  return Math.floor(Math.random() * ((colors.length)));
-}
 
-export const ACTIONS = {
-  SET_FINISH: 'setIsFinish',
-  SET_NAME: 'setName',
-}
 
-const taskReducer = (task: any, action: {type: any, payload: any} ) => {
-  switch(action.type){
-    case ACTIONS.SET_FINISH:
-      return {...task,isFinish: action.payload}
-  }
-}
+
 
 const Tasks = (props: any) => {
   // ASSIGN PROPS TO LOCAL VARIABLES
   // assign local task list
   const taskList = props.taskList;
+  const finishHandler = (id: any) => {
+    const newTaskList = taskList.map((item: any) => {
+      if (item.id === id){
+        item.isFinish = !item.isFinish;
+      }
+      return item;
+    })
+    props.setTaskList(newTaskList);
+  }
   
-  console.log(taskList);
 
-  const [curTask, setCurTask] = useState(0);
-
-  const [task, taskDispatch] = useReducer(taskReducer,taskList[curTask])
-
-  
-
-  const renderItem = ({item,index}: any) => {
+  const renderItem = ({item, index}: any) => {
     const color = colors[3];
+    
     return (
       <Task 
-        id={item.id} 
-        name={item.taskName} 
         color={color} 
-        isCompleted={item.isFinish} 
-        setCurTask={setCurTask}
-        taskDispatch={taskDispatch}
-        />
+        id={item.id}
+        taskName={item.taskName}
+        isCompleted={item.isFinish}
+        finishHandler={() => finishHandler(item.id)}
+      
+      />
 
     )
   }
@@ -55,6 +44,8 @@ const Tasks = (props: any) => {
       data={taskList}
       renderItem={renderItem}
       style={styles.container}
+      extraData={props.index}
+      keyExtractor={(item: any) => item.id}
     >
     
     </FlatList>
