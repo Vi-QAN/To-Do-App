@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
+import { Text, View, StyleSheet } from 'react-native';
 import { IconButton } from '@react-native-material/core'
 import Icon from '@expo/vector-icons/MaterialCommunityIcons'
 
@@ -29,11 +29,11 @@ const styles = StyleSheet.create({
     container: {
         height: '15%',
         width: '100%',
-        position: 'absolute',
-        paddingHorizontal: '6%',
+        padding: '6%',
         margin: 0,
         top: 0,
         left: 0,
+        
     }, 
 
     date: {

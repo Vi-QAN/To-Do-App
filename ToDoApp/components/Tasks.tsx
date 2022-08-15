@@ -2,17 +2,17 @@ import { StyleSheet, FlatList } from 'react-native';
 import Task from './Task';
 
 // multiple colors to color multiple tasks
-const colors = ['#61f4de','#65cbe9', '#68b6ef ','#6c8dfa','#6e78ff', '#4c9afa']
-
-
-
-
+const colors = ['#61f4de','#65cbe9', '#68b6ef','#6c8dfa','#6e78ff', '#4c9afa']
 
 const Tasks = (props: any) => {
   // ASSIGN PROPS TO LOCAL VARIABLES
+
+  // 
+  const colorLength = colors.length;
+
   // assign local task list
   const taskList = props.taskList;
-  const finishHandler = (id: any) => {
+  const finishHandler = (id: number) => {
     const newTaskList = taskList.map((item: any) => {
       if (item.id === id){
         item.isFinish = !item.isFinish;
@@ -24,8 +24,8 @@ const Tasks = (props: any) => {
   
 
   const renderItem = ({item, index}: any) => {
-    const color = colors[3];
-    
+    const color = colors[index % colorLength];
+   
     return (
       <Task 
         color={color} 
@@ -44,7 +44,7 @@ const Tasks = (props: any) => {
       data={taskList}
       renderItem={renderItem}
       style={styles.container}
-      extraData={props.index}
+      extraData={colorLength}
       keyExtractor={(item: any) => item.id}
     >
     

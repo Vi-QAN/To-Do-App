@@ -6,35 +6,7 @@ import Add from '../components/Add';
 import moment from 'moment';
 import AddScreen from '../screens/AddScreen';
 
-// data object - a 2D array contains
-// date - a moment object and corresponding task list for that date
-const DATA = [
-  {
-    date: moment(),
-    taskList: []
-  },
-  {
-    date: moment().clone().add(1,'days'),
-    taskList: []
-  },
-  {
-    date: moment().clone().add(2,'days'),
-    taskList: []
-  },
-  {
-    date: moment().clone().add(3,'days'),
-    taskList: []
-  },
-  {
-    date: moment().clone().add(4,'days'),
-    taskList: []
-  },
-  {
-    date: moment().clone().add(5,'days'),
-    taskList: []
-  },
-  
-]
+
 
 const ACTIONS = {
   ADD_TASK: 'askTask',
@@ -94,7 +66,7 @@ const extractDates = (props: any) => {
 // renderer
 const Calendar = (props: any) => {
   // useState for data
-  const [data,dataDispatch] = useReducer(dataReducer, DATA);
+  const [data,dataDispatch] = useReducer(dataReducer, props.data);
 
   // useState for displaying add screen popup
   const [popUp, setPopUp] = useState(false); 
@@ -112,7 +84,7 @@ const Calendar = (props: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // useState for current task
-  const [taskList,setTaskList] = useState(DATA[0].taskList);
+  const [taskList,setTaskList] = useState(props.data[0].taskList);
   useEffect(() => {
     // set current task list according to chosen date
     setTaskList(data[selectedIndex].taskList);
@@ -135,9 +107,8 @@ const styles = StyleSheet.create({
   container: {
     height: '89%',
     width: '100%',
-    position: 'absolute',
     flexDirection: 'column',
-    top: '14%',
+    top: 0,
     left: 0,
     padding: '6%',
     alignItems: 'center',
