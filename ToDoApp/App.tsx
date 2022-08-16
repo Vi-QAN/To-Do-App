@@ -1,9 +1,12 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { AppState, View, Text, StyleSheet } from 'react-native';
+import React, { useRef, useState, useEffect, useReducer } from 'react';
+import { AppState, View, Text, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import Calendar from './components/Calendar';
 import Header from './components/Header';
 import {save, retrieve} from './components/DataHandler';
+// import {writeData, readData, openConnection} from './components/Database';
+// import TaskContext from './components/Database';
 import moment from 'moment';
+
 
 // data object - a 2D array contains
 // date - a moment object and corresponding task list for that date
@@ -36,23 +39,42 @@ const DATA = [
 ]
 
 export default function App() {
+  // useReducer for data
+  const [data,setData] = useState(DATA);
+
   const today = moment();
-  let data = [];
-  
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", nextAppState => {
+    const subscription = AppState.addEventListener("change",async nextAppState => {
       if (
         appState.current.match(/inactive|background/) &&
         nextAppState === "active"
       ) {
-        // retrieve()
-      }
+        // ### async storage test
+        const loaded = retrieve();
+        if (loaded === null || loaded instanceof Promise){
+          setData(DATA);
+        } else {
+          
+          setData(loaded);
+        }
 
-      if ( appState.current.match(/active/) && nextAppState === "background"){
-        save(DATA);
+        // ### realm database test
+        // const connection = openConnection();
+        // try {
+        //   const data = readData({realm: connection});
+        // } catch (e) {
+        //   console.log(e);
+        // }
+        }
+      
+
+      if ( appState.current.match(/active/) && 
+          nextAppState === "background"){
+        
+        
       }
 
       appState.current = nextAppState;
@@ -61,18 +83,21 @@ export default function App() {
     });
 
     return () => {
+      // ### async storage test 
+      save(data);
       subscription.remove();
     };
   }, []);
   
   return ( 
+  <SafeAreaView style={styles.container}>
+    <StatusBar />
     
-    <View style={styles.container}>
-      <Header today={today}/>
-      <Calendar today={today} data={DATA}/>
-      <Text>Current state is: {appStateVisible}</Text>
-    </View>
-   
+    <Header today={today}/>
+    <Calendar today={today} data={data}/>
+    {/* <Text style={{position: 'absolute'}}>Current state is: {appStateVisible}</Text> */}
+    <Text style={{position: 'absolute'}}>{}</Text>
+  </SafeAreaView>
   );
 }
 

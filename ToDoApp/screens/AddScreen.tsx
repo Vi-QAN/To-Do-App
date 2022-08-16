@@ -42,7 +42,7 @@ export default function AddScreen(props: any) {
                             style={styles.textInput}
                             placeholder='Write task here'
                             onChangeText={text => setText(text) }
-                            multiline={true}
+                            multiline={false}
                             onPressOut={()=> {Keyboard.dismiss}}
                         />
                         <InputField iconName='alarm' />
