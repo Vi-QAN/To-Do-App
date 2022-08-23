@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   FlatList,
 } from 'react-native';
 import { Date } from './Date';
 
-const Dates = (props: any) => {
+const Dates = (props: {data: moment.Moment[], selectedIndex: number, setSelectedIndex: Function, dateGenerator: Function}) => {
   const selectedIndex = props.selectedIndex;
   const [offSet, setOffSet] = useState(0); 
-  const [isScrollLeft, setIsScrollLeft] = useState(false);
   const data = props.data;
+
+  
 
   const renderItem = ({item, index}: any) => {
     const selected = index === selectedIndex ? true : false;
@@ -41,9 +42,16 @@ const Dates = (props: any) => {
       // }}
       onScroll={(event) => {
         let currentOffset = event.nativeEvent.contentOffset.x;
-        let isLeft = currentOffset > offSet ? false : true;
+        let isRight = currentOffset > offSet ? true : false;
         setOffSet(currentOffset);
-        setIsScrollLeft(isLeft);
+        if (isRight){
+          try {
+            props.dateGenerator();
+          } catch (err) {
+            console.log('Cannot add more date', err);
+          }
+          
+        }
   
       }}
       

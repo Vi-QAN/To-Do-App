@@ -3,20 +3,14 @@ TouchableWithoutFeedback,
 Keyboard,
 Platform} from 'react-native'
 import { useState } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons,SimpleLineIcons } from '@expo/vector-icons';
 
-const InputField = (props: any) => {
-
-    return (
-        <View style={styles.fieldContainer}>
-            <MaterialIcons name={props.iconName} style={styles.icon} size={30} />
-            {/* <Text style={styles.}>10:00 am</Text> */}
-        </View>
-    )
-}
 
 export default function AddScreen(props: any) {
     const [text,setText] = useState('');
+    const iconSize = 30;
+    const iconColor = '';
+    const taskLength = props.taskList.length;
     return (
         <Modal
             animationType="slide"
@@ -45,18 +39,29 @@ export default function AddScreen(props: any) {
                             multiline={false}
                             onPressOut={()=> {Keyboard.dismiss}}
                         />
-                        <InputField iconName='alarm' />
-                        <InputField iconName='notifications-active' />
-                        <InputField iconName='label' />
+                        <View style={styles.fieldContainer}>
+                            <Ionicons name="alarm-outline" style={styles.icon} size={iconSize} color="black" />
+                        </View>
+                        <View style={styles.fieldContainer}>
+                            <Ionicons name="md-notifications-outline" size={iconSize} color="black" />
+                        </View>
+                        <View style={styles.fieldContainer}>
+                            <SimpleLineIcons name="tag" size={iconSize - 2} color="black" />
+                        </View>
+                        
 
                         <TouchableHighlight 
                             activeOpacity={0.6} 
                             underlayColor={'#FFF'} 
                             onPress={() => {
+                                if (text === ''){
+                                    return;
+                                }
                                 let newTask = {
-                                    id: props.taskList.length + 1,
+                                    id: taskLength === 0 ? taskLength + 1 : props.taskList[taskLength - 1].id + 1,
                                     taskName: text,
                                     isFinish: false,
+                                    prioritized: false,
                                 }
                                 setText('');
                                 // add new task to current task list

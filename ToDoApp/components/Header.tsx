@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { IconButton } from '@react-native-material/core'
-import Icon from '@expo/vector-icons/MaterialCommunityIcons'
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Header = (props: any) => {
     return (
@@ -15,7 +15,7 @@ const Header = (props: any) => {
                 </Text>
                 <IconButton
                     style={styles.button}
-                    icon={props => <Icon name="magnify" {...props} />}
+                    icon={props => <MaterialCommunityIcons name="magnify" size={24} color="black" />}
                 >
                 </IconButton>
             </View>

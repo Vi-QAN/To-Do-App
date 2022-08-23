@@ -1,11 +1,14 @@
-import React, { useRef, useState, useEffect, useReducer } from 'react';
-import { AppState, View, Text, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { AppState, View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import Calendar from './components/Calendar';
 import Header from './components/Header';
 import {save, retrieve} from './components/DataHandler';
 // import {writeData, readData, openConnection} from './components/Database';
 // import TaskContext from './components/Database';
 import moment from 'moment';
+
+import { _Item } from './types';
+import { ListItem } from '@react-native-material/core';
 
 
 // data object - a 2D array contains
@@ -14,31 +17,29 @@ const DATA = [
   {
     date: moment(),
     taskList: []
-  },
-  {
-    date: moment().clone().add(1,'days'),
-    taskList: []
-  },
-  {
-    date: moment().clone().add(2,'days'),
-    taskList: []
-  },
-  {
-    date: moment().clone().add(3,'days'),
-    taskList: []
-  },
-  {
-    date: moment().clone().add(4,'days'),
-    taskList: []
-  },
-  {
-    date: moment().clone().add(5,'days'),
-    taskList: []
-  },
-  
+  }
 ]
 
+// use to generate more date when on scroll
+const dataGenerator = async () => {
+  let i = 0;
+  const data = []
+  // only keep maximum 10 days in the list
+  while (i < 6){
+    data.push(
+      {
+        date: moment().clone().add(i,'days'),
+        taskList: [] 
+      }
+    )
+    i++;
+  }
+  return data;
+  
+}
+
 export default function App() {
+  
   // useReducer for data
   const [data,setData] = useState(DATA);
 
@@ -47,6 +48,7 @@ export default function App() {
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   useEffect(() => {
+    
     const subscription = AppState.addEventListener("change",async nextAppState => {
       if (
         appState.current.match(/inactive|background/) &&
@@ -54,13 +56,16 @@ export default function App() {
       ) {
         // ### async storage test
         const loaded = retrieve();
-        if (loaded === null || loaded instanceof Promise){
-          setData(DATA);
+        if (loaded === null){
+          const generated = dataGenerator();
+          // setData(generated);
         } else {
+          // handle async function
+          loaded.then((loaded) => loaded.filter()).then()
           
-          setData(loaded);
         }
-
+        
+        // console.log(data);
         // ### realm database test
         // const connection = openConnection();
         // try {
@@ -73,28 +78,28 @@ export default function App() {
 
       if ( appState.current.match(/active/) && 
           nextAppState === "background"){
-        
+          save(data)
         
       }
 
       appState.current = nextAppState;
       setAppStateVisible(appState.current);
       console.log("AppState", appState.current);
+
+     
     });
 
     return () => {
       // ### async storage test 
-      save(data);
+      
       subscription.remove();
     };
   }, []);
   
   return ( 
   <SafeAreaView style={styles.container}>
-    <StatusBar />
-    
     <Header today={today}/>
-    <Calendar today={today} data={data}/>
+    <Calendar today={today} data={data} setData={setData}/>
     {/* <Text style={{position: 'absolute'}}>Current state is: {appStateVisible}</Text> */}
     <Text style={{position: 'absolute'}}>{}</Text>
   </SafeAreaView>
