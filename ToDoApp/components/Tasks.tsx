@@ -3,8 +3,6 @@ import { StyleSheet, FlatList } from 'react-native';
 import Task from './Task';
 import { _Task }  from '../types';
 
-
-
 // multiple colors to color multiple tasks
 const colors = ['#61f4de','#65cbe9', '#68b6ef','#6c8dfa','#6e78ff', '#4c9afa']
 
@@ -53,7 +51,6 @@ const Tasks = (props: {taskList: [_Task], setTaskList: Function}) => {
   // delete a task in current 
   const deleteTask = (id: number) => {
     const ind = taskList.findIndex((item: _Task) => item.id === id);
-   
     props.setTaskList((taskList: [_Task]) => taskList.splice(ind,1));
   }
 
@@ -107,7 +104,7 @@ const Tasks = (props: {taskList: [_Task], setTaskList: Function}) => {
       renderItem={renderItem}
       style={styles.container}
       extraData={[colorLength,longPressedBtn,sideMode]}
-      keyExtractor={(item: any, index: number) => item.id}
+      keyExtractor={(item: any) => item.id}
     >
     
     </FlatList>

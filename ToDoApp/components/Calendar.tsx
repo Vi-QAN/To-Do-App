@@ -13,7 +13,7 @@ import AddScreen from '../screens/AddScreen';
 const extractDates = (props: any) => {
   let dateList: moment.Moment[] = [];
   props.data.forEach((item: any) => {
-    dateList.push(item.date);
+    dateList.push(moment(item.date));
   })
   return dateList;
 }
@@ -43,10 +43,16 @@ const Calendar = (props: any) => {
     let newDates: any[] = [];
     // only keep maximum 10 days in the list
     while (length <= MAX_DATE && i < numOfDays){
-      newDates.push({
-        date: latestItem.date.clone().add(i,'days'),
-        taskList: [] 
-      })
+      try {
+        newDates.push({
+          // convert to moment object then clone
+          date: moment(latestItem.date).clone().add(i,'days'),
+          taskList: [] 
+        })
+      } catch(e) {
+        console.log('Cannot add more date');
+      }
+      
       i++;
     }    
     // add generated days into current data

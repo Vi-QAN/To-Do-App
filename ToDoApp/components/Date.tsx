@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Text,
   View,
   TouchableHighlight,
 } from 'react-native';
-import {Moment} from 'moment';
-
-
 
 const Date = (props: any) => {
  

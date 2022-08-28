@@ -1,27 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { AppState, View, Text, StyleSheet, SafeAreaView} from 'react-native';
+import { AppState, Text, StyleSheet, SafeAreaView} from 'react-native';
 import Calendar from './components/Calendar';
 import Header from './components/Header';
 import {save, retrieve} from './components/DataHandler';
-// import {writeData, readData, openConnection} from './components/Database';
-// import TaskContext from './components/Database';
 import moment from 'moment';
 
 import { _Item } from './types';
-import { ListItem } from '@react-native-material/core';
-
-
-// data object - a 2D array contains
-// date - a moment object and corresponding task list for that date
-const DATA = [
-  {
-    date: moment(),
-    taskList: []
-  }
-]
 
 // use to generate more date when on scroll
-const dataGenerator = async () => {
+const dataGenerator = () => {
   let i = 0;
   const data = []
   // only keep maximum 10 days in the list
@@ -41,29 +28,36 @@ const dataGenerator = async () => {
 export default function App() {
   
   // useReducer for data
-  const [data,setData] = useState(DATA);
+  const generated = dataGenerator();
+  const [data,setData] = useState(generated);
 
   const today = moment();
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   useEffect(() => {
-    
     const subscription = AppState.addEventListener("change",async nextAppState => {
       if (
         appState.current.match(/inactive|background/) &&
         nextAppState === "active"
       ) {
         // ### async storage test
-        const loaded = retrieve();
-        if (loaded === null){
-          const generated = dataGenerator();
-          // setData(generated);
+        const promise = retrieve();
+        if (promise === null){
+          alert("no data is fetch")
         } else {
+        
           // handle async function
-          loaded.then((loaded) => loaded.filter()).then()
-          
+          promise.then((object: any) => {
+                    const loaded = object.map((item: _Item) => item);
+                    setData(loaded);
+                  })
+                
+                .catch((err) => console.log(err))
+                .finally(() => console.log('done'))
         }
+        
+      
         
         // console.log(data);
         // ### realm database test
@@ -78,6 +72,7 @@ export default function App() {
 
       if ( appState.current.match(/active/) && 
           nextAppState === "background"){
+          console.log(data);
           save(data)
         
       }
