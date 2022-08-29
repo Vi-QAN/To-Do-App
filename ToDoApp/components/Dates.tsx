@@ -4,13 +4,43 @@ import {
   FlatList,
 } from 'react-native';
 import { Date } from './Date';
+import moment from 'moment';
 
-const Dates = (props: {data: moment.Moment[], selectedIndex: number, setSelectedIndex: Function, dateGenerator: Function}) => {
+const Dates = (props: {
+    dateList: moment.Moment[],
+    data: any,
+    setData: Function, 
+    selectedIndex: number, 
+    setSelectedIndex: Function}) => {
+
   const selectedIndex = props.selectedIndex;
   const [offSet, setOffSet] = useState(0); 
-  const data = props.data;
 
-  
+  const dateGenerator = () => {
+    // upper limit of dates that data list can hold
+    const MAX_DATE = 10
+    const numOfDays = 5
+    const length = props.data.length;
+    const latestItem = props.data[length - 1];
+    let i = 1;
+    let newDates: any[] = [];
+    // only keep maximum 10 days in the list
+    while (length <= MAX_DATE && i < numOfDays){
+      try {
+        newDates.push({
+          // convert to moment object then clone
+          date: moment(latestItem.date).clone().add(i,'days'),
+          taskList: [] 
+        })
+      } catch(e) {
+        console.log('Cannot add more date');
+      }
+      
+      i++;
+    }    
+    // add generated days into current data
+    props.setData((data: any) => [...data, ...newDates]);
+  };
 
   const renderItem = ({item, index}: any) => {
     const selected = index === selectedIndex ? true : false;
@@ -29,24 +59,19 @@ const Dates = (props: {data: moment.Moment[], selectedIndex: number, setSelected
   }
   return (
     <FlatList
-      data = {data}
+      data = {props.dateList}
       renderItem={renderItem}
       style={styles.container}
       horizontal={true}
       extraData = {selectedIndex}
       onEndReachedThreshold = {0.9}
-      // onEndReached = {() => {
-      //   const dateLength = dates.length;
-      //   dateLength > 1 ? setCurDate(dates.at(dates.length - 1)) : getNextDays();
-      //   getNextDays();
-      // }}
       onScroll={(event) => {
         let currentOffset = event.nativeEvent.contentOffset.x;
         let isRight = currentOffset > offSet ? true : false;
         setOffSet(currentOffset);
         if (isRight){
           try {
-            props.dateGenerator();
+            dateGenerator();
           } catch (err) {
             console.log('Cannot add more date', err);
           }
@@ -54,8 +79,6 @@ const Dates = (props: {data: moment.Moment[], selectedIndex: number, setSelected
         }
   
       }}
-      
-      
     >
       
     </FlatList>
